@@ -1,0 +1,12 @@
+rules:
+  - Prefer TypeScript for all backend files.
+  - Follow the structure of Express + Prisma projects.
+  - Use ES module syntax (`import/export`) instead of require().
+  - All API routes go inside `src/routes/` folder.
+  - Use `@prisma/client` for all DB operations.
+  - Environment variables are loaded via `.env` using `dotenv/config` in prisma.config.ts.
+  - Use async/await for all DB calls.
+  - The base URL prefix for all API routes is `/api`.
+  - Prisma client must be initialized once per file.
+  - Server entry file is `src/server.ts`.
+  - Do not include frontend or React code.

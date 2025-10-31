@@ -35,6 +35,24 @@ export function handleError(error: unknown): NextResponse {
     );
   }
 
+  // Zod validation errors - check first
+  if (error instanceof ZodError) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: ErrorCode.VALIDATION_ERROR,
+          message: "Validation failed",
+          details: error.issues.map((issue) => ({
+            path: issue.path.join("."),
+            message: issue.message,
+          })),
+        },
+      },
+      { status: 400 }
+    );
+  }
+
   if (error instanceof Error) {
     // Prisma errors
     if (error.message.includes("Unique constraint")) {
@@ -60,24 +78,6 @@ export function handleError(error: unknown): NextResponse {
           },
         },
         { status: 404 }
-      );
-    }
-
-    // Zod validation errors
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: ErrorCode.VALIDATION_ERROR,
-            message: "Validation failed",
-            details: error.errors.map((err) => ({
-              path: err.path.join("."),
-              message: err.message,
-            })),
-          },
-        },
-        { status: 400 }
       );
     }
   }

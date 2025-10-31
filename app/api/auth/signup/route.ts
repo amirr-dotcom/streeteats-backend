@@ -17,9 +17,12 @@ export async function POST(request: NextRequest) {
     const validated = createUserSchema.parse(body);
 
     const response = await createUserWithPassword(validated);
+    
+    // Extract data from the response
     const responseData = await response.json();
-
-    const jsonResponse = NextResponse.json(
+    
+    // Create response with custom message - matching login route pattern
+    const jsonResponse = Response.json(
       {
         success: true,
         data: responseData.data,
@@ -28,9 +31,15 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
 
-    return addCORSHeaders(jsonResponse, request);
+    return addCORSHeaders(
+      new NextResponse(jsonResponse.body, jsonResponse),
+      request
+    );
   } catch (error) {
     const errorResponse = handleError(error);
-    return addCORSHeaders(errorResponse as NextResponse, request);
+    return addCORSHeaders(
+      new NextResponse(errorResponse.body, errorResponse),
+      request
+    );
   }
 }

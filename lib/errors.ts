@@ -36,6 +36,7 @@ export function handleError(error: unknown): NextResponse {
   }
 
   // Zod validation errors - check first
+  // Using error.issues (Zod v3+ property) not error.errors
   if (error instanceof ZodError) {
     return NextResponse.json(
       {

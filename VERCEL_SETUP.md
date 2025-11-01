@@ -1,35 +1,52 @@
 # Vercel Environment Variables Setup
 
+## ⚠️ CRITICAL: Database Connection Issue
+
+If you're getting `Can't reach database server` errors, you **MUST** use **Connection Pooling** (port 6543) instead of direct connection (port 5432).
+
+### Why?
+- Vercel serverless functions have connection limits
+- Direct connections (5432) often fail on serverless
+- Connection pooling (6543) is designed for serverless/edge functions
+
+---
+
 ## Required Environment Variables
 
 You **MUST** set these in Vercel Dashboard for the API to work:
 
-### 1. DATABASE_URL
+### 1. DATABASE_URL (REQUIRED - Use Connection Pooling!)
 
-Go to: **Vercel Dashboard → Your Project → Settings → Environment Variables**
+**🚨 IMPORTANT: Use Connection Pooling URL (port 6543), NOT direct connection!**
 
-Add:
+#### Steps to Get Supabase Connection Pooling URL:
+
+1. Go to [Supabase Dashboard](https://app.supabase.com)
+2. Select your project
+3. Go to **Settings** → **Database**
+4. Scroll to **Connection Pooling** section
+5. Select **Transaction** mode (recommended) or **Session** mode
+6. Copy the connection string - it will have:
+   - `pooler.supabase.com` in the hostname (NOT `db.supabase.co`)
+   - Port `6543` (NOT `5432`)
+   - Format: `postgresql://postgres.cidxoxkeyhuvhzydmnwn:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?sslmode=require`
+
+#### Add to Vercel:
 - **Key**: `DATABASE_URL`
-- **Value**: Your Supabase connection string
+- **Value**: The connection pooling URL from Supabase (port 6543)
 
-#### For Supabase:
-You have two options:
-
-**Option A: Direct Connection (Simple)**
+**Example:**
 ```
-postgresql://postgres:[YOUR-PASSWORD]@db.cidxoxkeyhuvhzydmnwn.supabase.co:5432/postgres?sslmode=require
+postgresql://postgres.cidxoxkeyhuvhzydmnwn:[YOUR-PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require
 ```
 
-**Option B: Connection Pooling (Recommended for Serverless)**
-- Go to Supabase Dashboard → Settings → Database
-- Find "Connection Pooling" section
-- Use the **Transaction** or **Session** mode connection string
-- It will look like:
-```
-postgresql://postgres.cidxoxkeyhuvhzydmnwn:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?sslmode=require
-```
+**⚠️ Replace `[YOUR-PASSWORD]` with your actual Supabase database password!**
 
-**⚠️ Important**: Replace `[YOUR-PASSWORD]` with your actual Supabase database password!
+#### ❌ DO NOT USE (Direct Connection - Port 5432):
+```
+postgresql://postgres:[PASSWORD]@db.cidxoxkeyhuvhzydmnwn.supabase.co:5432/postgres
+```
+This will fail on Vercel serverless functions!
 
 ### 2. JWT_SECRET
 

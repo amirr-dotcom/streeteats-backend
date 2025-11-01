@@ -4,8 +4,8 @@ import { loginSchema } from "@/lib/validations";
 import { handleError } from "@/lib/errors";
 
 // Route segment config for Vercel compatibility
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 // POST /api/auth/login - Login and get JWT token
 export async function POST(request: NextRequest) {

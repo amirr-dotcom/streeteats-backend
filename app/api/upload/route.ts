@@ -4,13 +4,6 @@ import { join } from "path";
 import { existsSync } from "fs";
 import { randomUUID } from "crypto";
 import { handleError } from "@/lib/errors";
-import { handleCORS, addCORSHeaders } from "@/lib/cors";
-
-// Handle OPTIONS preflight request
-export async function OPTIONS(request: NextRequest) {
-  const corsResponse = handleCORS(request);
-  return corsResponse || new NextResponse(null, { status: 204 });
-}
 
 // POST /api/upload - Upload image file
 // Alternative to base64 - stores files locally
@@ -90,15 +83,12 @@ export async function POST(request: NextRequest) {
     const url = `/uploads/${filename}`;
     const fullUrl = `${request.nextUrl.origin}${url}`;
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       success: true,
       data: { url: fullUrl, localUrl: url },
       message: "File uploaded successfully",
     });
-
-    return addCORSHeaders(response, request);
   } catch (error) {
-    const errorResponse = handleError(error);
-    return addCORSHeaders(errorResponse as NextResponse, request);
+    return handleError(error);
   }
 }

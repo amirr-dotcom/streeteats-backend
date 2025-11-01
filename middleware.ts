@@ -2,51 +2,28 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // Handle CORS for API routes
-  if (request.nextUrl.pathname.startsWith("/api")) {
-    const origin = request.headers.get("origin");
+  const response = NextResponse.next();
 
-    // Handle preflight OPTIONS requests
-    if (request.method === "OPTIONS") {
-      const response = new NextResponse(null, { status: 204 });
+  // Set CORS headers for all API routes
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With"
+  );
+  response.headers.set("Access-Control-Allow-Credentials", "true");
 
-      // Allow all origins
-      response.headers.set("Access-Control-Allow-Origin", origin || "*");
-      response.headers.set(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-      );
-      response.headers.set(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, X-Requested-With"
-      );
-      response.headers.set("Access-Control-Allow-Credentials", "true");
-      response.headers.set("Access-Control-Max-Age", "86400");
-
-      return response;
-    }
-
-    // For actual requests, add CORS headers to the response
-    const response = NextResponse.next();
-
-    // Allow all origins
-    response.headers.set("Access-Control-Allow-Origin", origin || "*");
-    response.headers.set(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-    );
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-Requested-With"
-    );
-    response.headers.set("Access-Control-Allow-Credentials", "true");
-
-    return response;
+  // Handle preflight OPTIONS requests
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, { status: 204, headers: response.headers });
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: "/api/:path*", // apply only to API routes
 };

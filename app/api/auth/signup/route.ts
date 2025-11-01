@@ -4,8 +4,8 @@ import { createUserSchema } from "@/lib/validations";
 import { handleError } from "@/lib/errors";
 
 // Route segment config for Vercel compatibility
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 // POST /api/auth/signup - Register a new user (Signup)
 // OPTIONS is handled by global middleware.ts
@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
     const validated = createUserSchema.parse(body);
 
     const response = await createUserWithPassword(validated);
-    
+
     // Extract data from the response
     const responseData = await response.json();
-    
+
     // Return success response
     return NextResponse.json(
       {

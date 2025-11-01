@@ -6,7 +6,7 @@ const nextConfig = {
       bodySizeLimit: "2mb",
     },
   },
-  output: "standalone", // ✅ Important for Vercel edge/serverless build
+  // Note: output: "standalone" removed - Vercel handles this automatically
 };
 
 module.exports = nextConfig;

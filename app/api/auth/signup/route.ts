@@ -7,12 +7,8 @@ import { handleError } from "@/lib/errors";
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-// Handle OPTIONS preflight request
-export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, { status: 204 });
-}
-
 // POST /api/auth/signup - Register a new user (Signup)
+// OPTIONS is handled by global middleware.ts
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

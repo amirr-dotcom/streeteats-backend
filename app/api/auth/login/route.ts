@@ -4,6 +4,10 @@ import { loginSchema } from "@/lib/validations";
 import { handleError } from "@/lib/errors";
 import { handleCORS, addCORSHeaders } from "@/lib/cors";
 
+// Route segment config for Vercel compatibility
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 // Handle OPTIONS preflight request
 export async function OPTIONS(request: NextRequest) {
   const corsResponse = handleCORS(request);

@@ -1,7 +1,7 @@
 import { prisma } from "./prisma";
 import { CRUDFactory } from "./factory";
 import { createUserSchema, updateUserSchema } from "./validations";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const userFactory = new CRUDFactory(prisma, "User", prisma.user);
 

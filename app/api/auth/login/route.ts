@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 // POST /api/auth/login - Login and get JWT token
+// CORS is handled globally by middleware.ts
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
